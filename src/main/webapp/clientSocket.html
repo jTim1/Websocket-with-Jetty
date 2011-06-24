@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script>
+	var clientWebSocket = new WebSocket("ws://localhost:9090/WebSocketServer");
+	
+	if(!window.WebSocket) {
+		wsLogConsole('<span style="color:red">BROWSER DO NOT SUPPORT WEBSOCKET</span>');
+	}
+
+	clientWebSocket.onopen = function(event) {
+		wsOnopen(event);
+
+	};
+
+	clientWebSocket.onmessage = function(event) {
+		wsOnmessage(event);
+
+	};
+
+	clientWebSocket.onclose = function(event) {
+		wsOnclose(event);
+
+	};
+
+	clientWebSocket.onerror = function(event) {
+		wsOnerror(event);
+
+	};
+
+	function wsLogConsole(message) {
+		var output = document.getElementById("output");
+		var pre = document.createElement("p");
+		pre.innerHTML = "" + message;
+		output.appendChild(pre);
+	}
+
+	function wsOnopen(event) {
+		wsLogConsole("CONNECTED");
+	}
+
+	function wsOnclose(event) {
+		wsLogConsole("DISCONNECTED");
+	}
+
+	function wsOnerror(event) {
+		wsLogConsole('<span style="color:red">ERROR ON WEBSOCKET: ' + event.data
+				+ '</span>');
+	}
+
+	function wsOnmessage(event) {
+		wsLogConsole('<span style="color:blue">RESPONSE: ' + event.data
+				+ '</span>');
+	}
+</script>
+<title>Welcome to the WebSocket Sample</title>
+
+<style>
+
+#lbOutput {
+	font-size: 12px;
+	font-weight: bold;
+	margin: 0 0;
+}
+
+#output {
+	background-color: white;
+	border: solid 1px #ccc;
+	width: 400px;
+	height: 150px;
+}
+
+#output p {
+	margin: 0 0;
+	font-size: 12px;
+}
+
+#message {
+	width: 200px;
+}
+
+footer {
+	font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+	<header><h1>Welcome to the WebSocket Sample</h1></header>
+	<div id="demo">
+		<input id="message" type="text" value="" placeholder="Type your message here..." />
+		<input id="btnSend" type="button" value="Send" />
+	</div>
+
+	<label id="lbOutput">Output:</label>
+	<div id="output"></div>
+	
+	<script type="text/javascript">
+	var btnSend = document.getElementById("btnSend");
+	btnSend.addEventListener("click", sendData, false);
+
+	function sendData(event) {
+		var message = document.getElementById("message").value;
+		wsLogConsole("SENT: " + message);
+		clientWebSocket.send(message);
+	}
+</script>
+<footer>Developed with WebSocket and Jetty. By <a href="https://github.com/jTim1">jTim.</a></footer>
+	
+</body>
+
+
+
+</html> 
